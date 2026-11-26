@@ -2,13 +2,13 @@
 
 ## Case
 
-Kamu diminta untuk membangun sistem **ATS (Applicant Tracking System)** sederhana dengan **dua antarmuka: satu untuk HR dan satu untuk kandidat (pelamar)**.
+Kamu diminta untuk membangun sistem **ATS (Applicant Tracking System)** sederhana dengan **dua interface: satu untuk HR dan satu untuk kandidat (pelamar)**.
 
-Tim HR sering kewalahan menyaring ratusan CV untuk satu lowongan. Di sistem ini, kandidat melamar sendiri dengan mengunggah CV, lalu AI menilai kecocokan CV tersebut dengan requirement lowongan. HR meninjau hasilnya dan menentukan kelanjutan setiap kandidat.
+Tim HR sering kewalahan menyaring ratusan CV untuk beberapa lowongan. Di sistem ini, kandidat melamar sendiri dengan mengunggah CV, lalu AI menilai kecocokan CV tersebut dengan requirement lowongan. HR meninjau hasilnya dan menentukan kelanjutan dari setiap kandidat yang telah submit CV.
 
 ## Gambaran aplikasi
 
-| Antarmuka    | Pengguna | Yang bisa dilakukan                                                                                            |
+| Interface    | Pengguna | Yang bisa dilakukan                                                                                            |
 | ------------ | -------- | -------------------------------------------------------------------------------------------------------------- |
 | **HR**       | Tim HR   | Membuat lowongan, melihat daftar kandidat per lowongan beserta hasil analisis AI, dan mengubah status kandidat |
 | **Kandidat** | Pelamar  | Melihat lowongan yang tersedia dan melamar dengan mengunggah CV dalam format PDF                               |
@@ -19,7 +19,7 @@ Alur utama:
 Kandidat melamar (unggah CV PDF) → Backend mengekstrak teks CV → LLM menganalisis CV terhadap requirement → Hasil disimpan → HR meninjau di dashboard
 ```
 
-Login/autentikasi tidak wajib. Cukup pisahkan kedua antarmuka lewat route, misalnya `/hr/...` untuk HR dan `/jobs/...` untuk kandidat.
+Login/autentikasi tidak wajib. Cukup pisahkan kedua interface lewat route, misalnya `/hr/...` untuk HR dan `/jobs/...` untuk kandidat.
 
 ## Waktu
 
