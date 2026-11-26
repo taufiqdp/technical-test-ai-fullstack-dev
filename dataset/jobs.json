@@ -1,0 +1,28 @@
+[
+  {
+    "id": "fe-dev",
+    "title": "Frontend Developer (React/Next.js)",
+    "description": "Kami mencari Frontend Developer untuk membangun dan memelihara dashboard HRIS internal (modul absensi, cuti, dan penggajian). Kamu akan bekerja bersama tim backend dan desainer untuk menghadirkan antarmuka yang cepat, rapi, dan mudah digunakan oleh tim HR maupun karyawan.",
+    "requirements": [
+      { "text": "Minimal 1 tahun pengalaman profesional menggunakan React atau Next.js", "type": "must" },
+      { "text": "Menguasai TypeScript", "type": "must" },
+      { "text": "Berpengalaman mengintegrasikan frontend dengan REST API", "type": "must" },
+      { "text": "Terbiasa menggunakan Tailwind CSS", "type": "nice" },
+      { "text": "Pernah menulis automated test (Jest, Vitest, atau Playwright)", "type": "nice" },
+      { "text": "Memahami dasar aksesibilitas web (a11y)", "type": "nice" }
+    ]
+  },
+  {
+    "id": "hr-generalist",
+    "title": "HR Generalist",
+    "description": "Kami mencari HR Generalist untuk mendukung operasional SDM di perusahaan dengan sekitar 200 karyawan, meliputi rekrutmen, administrasi karyawan, BPJS, dan hubungan industrial.",
+    "requirements": [
+      { "text": "Minimal 2 tahun pengalaman di bidang HR", "type": "must" },
+      { "text": "Pernah menangani proses rekrutmen end-to-end (sourcing hingga offering)", "type": "must" },
+      { "text": "Memahami regulasi ketenagakerjaan Indonesia (UU Ketenagakerjaan/Cipta Kerja, BPJS)", "type": "must" },
+      { "text": "Berpengalaman menggunakan aplikasi HRIS", "type": "nice" },
+      { "text": "Memiliki sertifikasi HR (misalnya BNSP)", "type": "nice" },
+      { "text": "Mampu berkomunikasi dalam Bahasa Inggris", "type": "nice" }
+    ]
+  }
+]
