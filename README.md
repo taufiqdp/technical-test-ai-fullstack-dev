@@ -2,9 +2,24 @@
 
 ## Case
 
-Kamu diminta untuk membangun sistem **ATS (Applicant Tracking System)** sederhana.
+Kamu diminta untuk membangun sistem **ATS (Applicant Tracking System)** sederhana dengan **dua antarmuka: satu untuk HR dan satu untuk kandidat (pelamar)**.
 
-Tim HR sering kewalahan menyaring ratusan CV untuk satu lowongan. Fitur yang kamu buat membantu HR menilai kecocokan kandidat dengan requirement lowongan menggunakan AI.
+Tim HR sering kewalahan menyaring ratusan CV untuk satu lowongan. Di sistem ini, kandidat melamar sendiri dengan mengunggah CV, lalu AI menilai kecocokan CV tersebut dengan requirement lowongan. HR meninjau hasilnya dan menentukan kelanjutan setiap kandidat.
+
+## Gambaran aplikasi
+
+| Antarmuka    | Pengguna | Yang bisa dilakukan                                                                                            |
+| ------------ | -------- | -------------------------------------------------------------------------------------------------------------- |
+| **HR**       | Tim HR   | Membuat lowongan, melihat daftar kandidat per lowongan beserta hasil analisis AI, dan mengubah status kandidat |
+| **Kandidat** | Pelamar  | Melihat lowongan yang tersedia dan melamar dengan mengunggah CV dalam format PDF                               |
+
+Alur utama:
+
+```
+Kandidat melamar (unggah CV PDF) → Backend mengekstrak teks CV → LLM menganalisis CV terhadap requirement → Hasil disimpan → HR meninjau di dashboard
+```
+
+Login/autentikasi tidak wajib. Cukup pisahkan kedua antarmuka lewat route, misalnya `/hr/...` untuk HR dan `/jobs/...` untuk kandidat.
 
 ## Waktu
 
@@ -12,26 +27,41 @@ Tim HR sering kewalahan menyaring ratusan CV untuk satu lowongan. Fitur yang kam
 
 ## Stack
 
-| Bagian   | Ketentuan                                                                                                                                            |
-| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Frontend | Next.js (App Router), TypeScript                                                                                                                     |
-| Backend  | Hono, TypeScript. Berjalan sebagai service terpisah dari Next.js (bukan Route Handler Next.js). Runtime bebas: Node.js, Bun, atau Cloudflare Workers |
-| Database | Postgres/SQLite                                                                                                                                      |
-| ORM      | Drizzle ORM                                                                                                                                          |
-| AI / LLM | Bebas tapi disarankan pakai yang gratis: Google AI Studio (Gemini) atau model `:free` di OpenRouter                                                  |
-| Lainnya  | Bebas memilih library UI, package manager, dan struktur repo (monorepo atau dua folder)                                                              |
+| Bagian   | Ketentuan                                                                                           |
+| -------- | --------------------------------------------------------------------------------------------------- |
+| Frontend | Next.js (App Router), TypeScript                                                                    |
+| Backend  | Hono, TypeScript.                                                                                   |
+| Database | Postgres/SQLite                                                                                     |
+| ORM      | Drizzle                                                                                             |
+| AI / LLM | Bebas tapi disarankan pakai yang gratis: Google AI Studio (Gemini) atau model `:free` di OpenRouter |
+| Lainnya  | Bebas memilih library UI, package manager, dan struktur repo (monorepo atau dua folder)             |
 
 ## Fitur wajib
 
-### 1. Lowongan
+### 1. Antarmuka HR
+
+**Lowongan**
 
 - HR bisa membuat lowongan berisi judul, deskripsi, dan daftar requirement. Setiap requirement bertipe `must` (wajib) atau `nice` (nilai tambah).
 - HR bisa melihat daftar lowongan beserta detailnya.
 
-### 2. Kandidat dan analisis AI
+**Dashboard kandidat**
 
-- Di halaman detail lowongan, HR bisa menambah kandidat dengan **mengunggah CV dalam format PDF**. dan hanya file PDF yang diterima.
-- Backend mengekstrak teks dari PDF, lalu menganalisis CV terhadap setiap requirement lowongan menggunakan LLM.
+- Daftar kandidat per lowongan, diurutkan berdasarkan skor, dengan filter status.
+- Detail kandidat berisi ringkasan, profil, dan tabel penilaian per requirement beserta buktinya.
+- HR bisa mengubah status kandidat dari `new` menjadi `shortlisted` atau `rejected`.
+- HR bisa menjalankan ulang analisis untuk kandidat yang analisisnya gagal.
+
+### 2. Antarmuka kandidat
+
+- Kandidat bisa melihat daftar lowongan beserta detailnya (judul, deskripsi, dan requirement).
+- Di halaman detail lowongan, kandidat bisa melamar dengan mengisi nama, email, dan **mengunggah CV dalam format PDF**. Hanya file PDF yang diterima.
+- Kalau file bukan PDF atau teksnya tidak bisa dibaca (misalnya PDF hasil scan atau rusak), tolak dengan pesan error yang jelas.
+- Setelah berhasil melamar, kandidat melihat konfirmasi bahwa lamarannya sudah diterima. Hasil analisis AI hanya terlihat di antarmuka HR, tidak ditampilkan ke kandidat.
+
+### 3. Analisis AI
+
+- Setiap lamaran yang masuk dianalisis di backend: teks diekstrak dari PDF, lalu CV dianalisis terhadap setiap requirement lowongan menggunakan LLM.
 - Hasil analisis minimal berisi data berikut. Nama field boleh berbeda dan field boleh ditambah.
 
   ```json
@@ -59,18 +89,11 @@ Tim HR sering kewalahan menyaring ratusan CV untuk satu lowongan. Fitur yang kam
   - `evidence` adalah kutipan dari CV yang mendukung verdict.
   - `score` bernilai 0–100.
 
-- Kalau file bukan PDF atau teksnya tidak bisa dibaca (misalnya PDF hasil scan atau rusak), tolak dengan pesan error yang jelas.
-- Kalau analisis gagal (output AI tidak valid, timeout, kena rate limit, dan sebagainya), kandidat tetap tersimpan dengan status gagal, dan HR bisa menjalankan ulang analisisnya.
-
-### 3. Dashboard kandidat
-
-- Daftar kandidat per lowongan, diurutkan berdasarkan skor, dengan filter status.
-- Detail kandidat berisi ringkasan, profil, dan tabel penilaian per requirement beserta buktinya.
-- HR bisa mengubah status kandidat dari `new` menjadi `shortlisted` atau `rejected`.
-- Ada tampilan untuk kondisi loading, error, dan data kosong.
+- Kalau analisis gagal (output AI tidak valid, timeout, kena rate limit, dan sebagainya), lamaran tetap tersimpan dengan status analisis gagal, dan HR bisa menjalankan ulang analisisnya dari antarmuka HR.
 
 ### 4. Backend dan kualitas
 
+- Kedua antarmuka punya tampilan untuk kondisi loading, error, dan data kosong.
 - Semua panggilan LLM dilakukan di backend Hono. API key tidak boleh sampai ke browser dan tidak boleh di-commit. Sediakan `.env.example`.
 - Validasi input request dan output LLM. Kami menyarankan zod + `@hono/zod-validator`.
 - Backend tidak boleh crash ketika LLM mengembalikan output yang aneh, merespons lambat, atau menolak request.
@@ -79,10 +102,6 @@ Tim HR sering kewalahan menyaring ratusan CV untuk satu lowongan. Fitur yang kam
 ## Bonus (opsional)
 
 - Docker: sediakan `Dockerfile` untuk frontend dan backend, serta `docker-compose.yml`, sehingga `docker compose up --build` menjalankan seluruh aplikasi. Data harus tetap ada setelah container di-restart, dan API key tidak boleh ikut tersimpan di dalam image.
-- Hono RPC client (`hc`) agar tipe data frontend dan backend tersambung
-- Generator pertanyaan interview berdasarkan gap kandidat
-- Streaming ringkasan analisis
-- Script evaluasi: beri label beberapa CV secara manual, lalu ukur seberapa sering verdict AI cocok dengan label kamu
 - Deploy ke layanan apa pun (misalnya Vercel, Cloudflare Workers, Railway, atau VPS)
 
 ## Dataset
@@ -96,7 +115,7 @@ Folder ini berisi sample data yang bisa kamu gunakan untuk dummy data dan testin
 
 Semua data di atas fiktif. Kamu boleh menambah data sendiri, tetapi **jangan memakai CV orang sungguhan**, karena provider AI di free tier bisa memakai data yang dikirim untuk meningkatkan layanannya.
 
-## Tentang API KEY AI gratis
+## API KEY AI gratis
 
 - **Google AI Studio** (aistudio.google.com): buat API key gratis, lalu gunakan model Gemini Flash. Mendukung structured output (JSON schema).
 - **OpenRouter** (openrouter.ai): pilih model yang namanya berakhiran `:free`. API-nya kompatibel dengan format OpenAI. Tidak semua model gratis mendukung structured output.
