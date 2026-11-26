@@ -18,7 +18,7 @@ Tim HR sering kewalahan menyaring ratusan CV untuk satu lowongan. Fitur yang kam
 | Backend  | Hono, TypeScript. Berjalan sebagai service terpisah dari Next.js (bukan Route Handler Next.js). Runtime bebas: Node.js, Bun, atau Cloudflare Workers |
 | Database | Postgres/SQLite                                                                                                                                      |
 | ORM      | Drizzle ORM                                                                                                                                          |
-| AI / LLM | Gratis: Google AI Studio (Gemini) atau model `:free` di OpenRouter                                                                                   |
+| AI / LLM | Bebas tapi disarankan pakai yang gratis: Google AI Studio (Gemini) atau model `:free` di OpenRouter                                                  |
 | Lainnya  | Bebas memilih library UI, package manager, dan struktur repo (monorepo atau dua folder)                                                              |
 
 ## Fitur wajib
@@ -28,11 +28,9 @@ Tim HR sering kewalahan menyaring ratusan CV untuk satu lowongan. Fitur yang kam
 - HR bisa membuat lowongan berisi judul, deskripsi, dan daftar requirement. Setiap requirement bertipe `must` (wajib) atau `nice` (nilai tambah).
 - HR bisa melihat daftar lowongan beserta detailnya.
 
-> Kamu boleh melakukan seed data dari `dataset/jobs.json`, tetapi form untuk membuat lowongan tetap harus ada.
-
 ### 2. Kandidat dan analisis AI
 
-- Di halaman detail lowongan, HR bisa menambah kandidat dengan **mengunggah CV dalam format PDF**. Hanya file PDF yang diterima.
+- Di halaman detail lowongan, HR bisa menambah kandidat dengan **mengunggah CV dalam format PDF**. dan hanya file PDF yang diterima.
 - Backend mengekstrak teks dari PDF, lalu menganalisis CV terhadap setiap requirement lowongan menggunakan LLM.
 - Hasil analisis minimal berisi data berikut. Nama field boleh berbeda dan field boleh ditambah.
 
@@ -76,21 +74,9 @@ Tim HR sering kewalahan menyaring ratusan CV untuk satu lowongan. Fitur yang kam
 - Semua panggilan LLM dilakukan di backend Hono. API key tidak boleh sampai ke browser dan tidak boleh di-commit. Sediakan `.env.example`.
 - Validasi input request dan output LLM. Kami menyarankan zod + `@hono/zod-validator`.
 - Backend tidak boleh crash ketika LLM mengembalikan output yang aneh, merespons lambat, atau menolak request.
-- Sertakan beberapa automated test untuk logika yang penting. LLM boleh (dan disarankan) di-mock.
+- Sertakan beberapa test.
 
-Referensi endpoint (boleh disesuaikan):
-
-```
-POST  /jobs
-GET   /jobs
-GET   /jobs/:id
-POST  /jobs/:id/candidates
-GET   /jobs/:id/candidates?status=&sort=score
-PATCH /candidates/:id
-POST  /candidates/:id/reanalyze
-```
-
-## Bonus (opsional, maksimal 1–2)
+## Bonus (opsional)
 
 - Docker: sediakan `Dockerfile` untuk frontend dan backend, serta `docker-compose.yml`, sehingga `docker compose up --build` menjalankan seluruh aplikasi. Data harus tetap ada setelah container di-restart, dan API key tidak boleh ikut tersimpan di dalam image.
 - Hono RPC client (`hc`) agar tipe data frontend dan backend tersambung
@@ -103,6 +89,8 @@ POST  /candidates/:id/reanalyze
 
 Isi folder `dataset/`:
 
+Folder ini berisi sample data yang bisa kamu gunakan untuk dummy data dan testing
+
 - `jobs.json` berisi 2 lowongan: Frontend Developer dan HR Generalist.
 - `cvs/` berisi 8 CV dummy dalam format PDF. File berawalan `fe-` melamar posisi Frontend Developer, sedangkan yang berawalan `hr-` melamar posisi HR Generalist.
 
@@ -112,7 +100,7 @@ Semua data di atas fiktif. Kamu boleh menambah data sendiri, tetapi **jangan mem
 
 - **Google AI Studio** (aistudio.google.com): buat API key gratis, lalu gunakan model Gemini Flash. Mendukung structured output (JSON schema).
 - **OpenRouter** (openrouter.ai): pilih model yang namanya berakhiran `:free`. API-nya kompatibel dengan format OpenAI. Tidak semua model gratis mendukung structured output.
-- Keduanya punya rate limit yang cukup ketat. Menanganinya adalah bagian dari tantangan, bukan kesalahanmu.
+- Keduanya punya rate limit yang lumayan. Menanganinya adalah bagian dari tantangan.
 
 ## Pengumpulan
 
