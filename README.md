@@ -113,7 +113,7 @@ Folder ini berisi sample data yang bisa kamu gunakan untuk dummy data dan testin
 - `jobs.json` berisi 2 lowongan: Frontend Developer dan HR Generalist.
 - `cvs/` berisi 8 CV dummy dalam format PDF. File berawalan `fe-` melamar posisi Frontend Developer, sedangkan yang berawalan `hr-` melamar posisi HR Generalist.
 
-Semua data di atas fiktif. Kamu boleh menambah data sendiri, tetapi **jangan memakai CV orang sungguhan**, karena provider AI di free tier bisa memakai data yang dikirim untuk meningkatkan layanannya.
+Semua data di atas fiktif. Kamu boleh menambah data sendiri.
 
 ## API KEY AI gratis
 
