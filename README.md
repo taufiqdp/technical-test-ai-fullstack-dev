@@ -128,7 +128,7 @@ Kirim link repository GitHub. Kalau repository-nya private, undang user `taufiqd
 1. Cara menjalankan project dari nol, termasuk env yang dibutuhkan (serta cara menjalankannya dengan Docker, kalau kamu mengambil bonus ini)
 2. Gambaran singkat arsitektur dan alur data analisis CV
 3. Keputusan teknis yang penting beserta trade-off-nya
-4. Bagian yang belum selesai atau yang akan diperbaiki kalau ada waktu lebih
+4. Bagian yang belum selesai atau yang akan diperbaiki kalau ada waktu lebih (jika ada)
 
 ## Penilaian
 
